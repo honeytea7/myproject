@@ -18,3 +18,13 @@ env文件放上线之后的地址
 env.development的文件放开发地址
 npm start后webpack读的是env.development文件
 npm run build读的是env文件
+
+yarn add qs是解析参数的
+
+hook只能再hook中运行或者再函数组件中运行
+debounce函数防抖
+js 大多的时候只能再runtime的时候发现错误，弱类型
+强类型再编译的时候就会报错
+
+unknown不能赋值给任何变量，也不能从上面读取任何方法
+# 泛型

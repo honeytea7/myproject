@@ -1,5 +1,23 @@
+export interface User{
+  id: string,
+  name: string,
+  email: string,
+  title: string,
+  organizationn:string
+}
 
-export default function SearchPanel({param,setParam,users}) {
+interface SearchPanelProps{
+  users: User[],
+  param: {
+    name: string,
+    personId:string
+  },
+  setParam: (param:SearchPanelProps['param']) => void;
+}
+
+
+
+export default function SearchPanel({param,setParam,users}:SearchPanelProps) {
  
  
   return (
