@@ -3,7 +3,8 @@ export interface User{
   name: string,
   email: string,
   title: string,
-  organizationn:string
+  organizationn: string
+  token:string
 }
 
 interface SearchPanelProps{
