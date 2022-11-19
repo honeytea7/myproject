@@ -17,14 +17,20 @@ export const http = async (endpoint: string,{data,token,headers,...customConfig}
 
     }
 
-    if(Config.method.toUpperCase() === 'GET'){
-    endpoint+=`${qs.stringify(data)}`
+    if (Config.method.toUpperCase() === 'GET') {
+      
+              endpoint += `?${qs.stringify(data)}`
+        
+      
     } else {
+           
+        
     Config.body=JSON.stringify(data||{})
 }
 
     return window.fetch(`${apiUrl}/${endpoint}`, Config)
-        .then( async (response) => {
+        .then(async (response) => {
+                  
             if (response.status === 401) {
                 //未登录的情况
                 await auth.logout()
@@ -34,6 +40,7 @@ export const http = async (endpoint: string,{data,token,headers,...customConfig}
             }
 
             const data = await response.json()
+    
             if (response.ok) {
                 return data
             } else {
@@ -45,9 +52,12 @@ export const http = async (endpoint: string,{data,token,headers,...customConfig}
             }
         }
     )
-}
+}  
 export const useHttp = () => {
     const { user } = useAuth()
+
+
+    // TS的Utility Types的用法  ：用泛型给他传入一个其他类型，然后untility type对这个类型进行某种操作
     return (...[endpoint,config]:Parameters<typeof http>)=> http(endpoint,{...config,token:user?.token})
     
 }

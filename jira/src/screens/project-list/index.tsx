@@ -2,8 +2,11 @@ import React, { useEffect,useState} from 'react'
 import { cleanObject, useDebounce, useMount } from '../../util'
 import SearchPanel from './search-panel'
 import List from './list'
+import styled from "@emotion/styled";
+// import qs from 'qs'
 
 import { useHttp } from '../../util/http'
+import { Typography } from 'antd';
 // const apiUrl=process.env.REACT_APP_API_URL
 export default function ProjectListScreen() {
   const client=useHttp()
@@ -13,11 +16,19 @@ export default function ProjectListScreen() {
     name: '',
   personId:''})
     const [list, setList] = useState([])
-    
-  const debounceParam=useDebounce(param,2000)
+    const [isLoading,setIsLoading]=useState(false)
+  const debounceParam = useDebounce(param, 2000)
+  
+  const [error,setError]=useState<null|Error>(null)
   useEffect(() => {
-
-client('project',{data:cleanObject(debounceParam)}).then(setList)
+    setIsLoading(true)
+    client('projects', { data: cleanObject(debounceParam) }).then(setList)
+      .catch((error) => {
+        setList([])
+        setError(error)
+      })
+      .finally(()=>{setIsLoading(false)})
+    
     
     //   fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debounceParam))}`).then(async (response) => {
     //   if (response.ok) {
@@ -26,6 +37,7 @@ client('project',{data:cleanObject(debounceParam)}).then(setList)
        
         
     // })
+     //eslint-disable-next-line
   }, [debounceParam])
 
     useMount(() => {
@@ -58,9 +70,15 @@ client('project',{data:cleanObject(debounceParam)}).then(setList)
 //   log()
 //   log()
   return (
-      <div>
-          <SearchPanel users={users} param={param} setParam={setParam}></SearchPanel>
-          <List users={users} list={list} ></List>
-    </div>
+      <Container>
+      <SearchPanel users={users} param={param} setParam={setParam}></SearchPanel>
+      {error ? <Typography.Text> { error.message}</Typography.Text>:undefined}
+          <List users={users} dataSource={list} loading={isLoading} ></List>
+    </Container>
   )
 }
+
+const Container = styled.div`
+
+padding:3.2rem;
+`

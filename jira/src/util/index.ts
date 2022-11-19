@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react"
 
-export const isFalsy = (value:any) => value === 0 ? false : !value
+export const isFalsy = (value: any) => value === 0 ? false : !value
+export const isVoid=(value:unknown)=>value===undefined||value===null||value===''
 // 取俩遍反是为了获得该值的布尔值
-export const cleanObject = (object:object) => {
+
+// object有可能是函数数组，结构函数返回的是空对象
+// object:object改成键值对{[kev:string]:unknown}
+
+export const cleanObject = (object:{[kev:string]:unknown}) => {
     const result = { ...object }
     Object.keys(result).forEach(key => {
-        //@ts-ignore
+   
         const value = object[key]
-        if (isFalsy(value)) {
-                  //@ts-ignore
+        if (isVoid(value)) {
+              
             delete result[key]
         }
     })
@@ -18,8 +23,9 @@ export const useMount = (callback:()=>void) => {
     // 页面加载的时候只执行一次
     useEffect(() => {
        callback()
-        
+        //TODO依赖项加上callback会造成无限循环，这个和usecalback和usememo有关 
     }
+        //eslint-disable-next-line
    ,[])
 }
 //问号表示可以不传

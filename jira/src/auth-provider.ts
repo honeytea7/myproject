@@ -8,20 +8,19 @@ export const handleUserResponse = ({ user }: { user: User }) => {
     window.localStorage.setItem(localStorageKey, user.token || '')
     return user
 }
-export const login = (data: { username: string, password: string }) => { 
-  return  fetch(`${apiUrl}/login`, {
+export const login = async (data: { username: string, password: string }) => { 
+  const respone = await fetch(`${apiUrl}/login`, {
         method: 'POST',
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
-        body:JSON.stringify(data),
-    }).then(async (respone: Response)=> {
-        if (respone.ok) {
-        return handleUserResponse(await respone.json())
-    }else {
-            return Promise.reject(data)
+        body: JSON.stringify(data),
+    });
+    if (respone.ok) {
+        return handleUserResponse(await respone.json());
+    } else {
+        return Promise.reject(data);
     }
-   })
         
 }
     
