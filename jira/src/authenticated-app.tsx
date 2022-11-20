@@ -1,18 +1,44 @@
+import {Navigate,Route,Routes}from'react-router'
 import styled from '@emotion/styled'
 
 import { Row } from './component/lib'
 import { useAuth } from './context/auth-context'
-import ProjectListScreen from './screens/project-list'
+
 import { ReactComponent as Logo } from './assets/jira2.svg'
 import { Button, Dropdown, Menu } from 'antd'
+import { resetRoute } from './util'
+import ProjectScreen from './screens/project'
+import ProjectListScreen from './screens/project-list'
 
 export default function AuthenticatedApp() {
-    const {logout,user}=useAuth()
   return (
       <Container>
-      <Header between={true}>
+      <PageHeader></PageHeader>
+      <Main>
+       
+          
+        <Routes>
+          <Route path={'/projects'} element={< ProjectListScreen/>}> </Route>
+          <Route path={'/projects/:projectId/*'} element={<ProjectScreen />}> </Route>
+          
+             <Route path="/" element={<Navigate to="/projects" />}></Route>
+        </Routes>
+  
+      
+      
+      </Main>
+    </Container>
+  )
+}
+
+
+
+const PageHeader = () =>
+  {
+  const {logout,user}=useAuth()
+return ( <Header between={true}>
         <HeaderLeft gap={true}>
-        <Logo width={'18rem'} height={'5rem'} color={'rgb(38,132,255'}></Logo>
+       <Button type='link' onClick={resetRoute}> <Logo width={'18rem'} height={'5rem'} color={'rgb(38,132,255'}></Logo></Button>
         <h3>项目</h3>
         <h3>用户</h3>
         </HeaderLeft>
@@ -27,11 +53,7 @@ export default function AuthenticatedApp() {
             <Button type={'link'} onClick={(e)=>e.preventDefault()}> Hi,{ user?.name}</Button>
           </Dropdown>
         </HeaderRight>
-      </Header>
-         <Main> <ProjectListScreen></ProjectListScreen></Main>
-    </Container>
-  )
-}
+      </Header>)}
 
 const Container = styled.div`
 display:grid;

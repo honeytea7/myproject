@@ -19,12 +19,12 @@ export const login = async (data: { username: string, password: string }) => {
     if (respone.ok) {
         return handleUserResponse(await respone.json());
     } else {
-        return Promise.reject(data);
+        return Promise.reject(await respone.json());
     }
         
 }
     
-export const register = (data: { username: string, password: string }) => { 
+export const register = async(data: { username: string, password: string }) => { 
    return fetch(`${apiUrl}/register`, {
         method: 'POST',
         headers: {
@@ -35,7 +35,7 @@ export const register = (data: { username: string, password: string }) => {
         if (respone.ok) {
         return handleUserResponse(await respone.json())
         } else {
-            return Promise.reject(data)
+            return Promise.reject(await respone.json())
     }
    })
         

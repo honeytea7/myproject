@@ -1,9 +1,12 @@
 import { Table, TableProps } from 'antd';
-import React from 'react'
+
 import { User } from './search-panel';
 import dayjs from 'dayjs';
+import { render } from '@testing-library/react';
+import { Link } from 'react-router-dom';
 
-interface Project{
+
+export interface Project{
   id: string;
   
   name: string;
@@ -17,14 +20,18 @@ interface ListProps extends TableProps<Project>{
   users:User[]
   
 }
-export default function List({ users ,...props}: ListProps) {
-  
+export  function List({ users ,...props}: ListProps) {
+ 
 
   return (<Table pagination={false}  rowKey='id' columns={[{
     title: '名称',
-    dataIndex: 'name',
+
     //可排序中文字符
-    sorter:(a,b)=>a.name.localeCompare(b.name)
+    sorter: (a, b) => a.name.localeCompare(b.name),
+    
+    render(value, project) {
+      return <Link to={String(project.id)}>{ project.name}</Link>
+    }
   },{
     title: '部门',
     dataIndex: 'organization',

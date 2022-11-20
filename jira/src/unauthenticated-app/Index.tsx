@@ -1,18 +1,22 @@
-import { Button, Card, Divider } from 'antd'
+import { Button, Card, Divider, Typography } from 'antd'
 import React, { useState } from 'react'
 import Login from './Login'
 import Register from './Register'
 import styled from '@emotion/styled'
 import jira from '../assets/emirates.svg'
+import { useDocumentTitle } from '../util'
 export default function UnauthenticatedApp() {
-    const [isRegister,setIsRegister]=useState(false)
+  const [isRegister, setIsRegister] = useState(false)
+  const [error,setError]=useState<Error|null>(null)
+  useDocumentTitle('请注册登陆以继续')
   return (
     <Container >
       <Header></Header>
  
       <ShadowCard>
-        <Title>{ isRegister?'请注册':'请登录'}</Title>
-        {isRegister ? <Register></Register> : <Login></Login>}
+        <Title>{isRegister ? '请注册' : '请登录'}</Title>
+        {error ? <Typography.Text type='danger'>{error.message}</Typography.Text>:null}
+        {isRegister ? <Register onError={setError}></Register> : <Login  onError={setError}></Login>}
         <Divider/>
            <Button type='link' onClick={()=>{setIsRegister(!isRegister)}}>
               {isRegister?'已有账号直接登录':"没有账号？注册"}

@@ -3,15 +3,27 @@ import { useAuth } from '../context/auth-context'
 
 import {Form, Input,Button} from'antd'
 import { LoginButton } from './Index'
-export default function Login() {
-      const {login,user}=useAuth()
-    const handleSubmit = (value: {username:string,password:string}) => {
+import { useAsunc } from '../util/use-async'
+export default function Login({onError}:{onError:(error:Error)=>void}) {
+  const { login, user } = useAuth()
+  
+  const {run ,isLoading}=useAsunc(undefined,{throwOnError:true})
+
+
+
+    const handleSubmit = async(value: {username:string,password:string}) => {
       console.log(value);
       
         // event.preventDefault()
         // const username = (event.currentTarget.elements[0] as HTMLInputElement).value
         // const password = (event.currentTarget.elements[1] as HTMLInputElement).value
-        login(value)
+           // 也可用register.catch()这个catch会等执行完出错才会调用
+    try {
+  await run( login(value))
+    } catch (error) {
+      onError(error)
+    // 如果不加async和await的话 Login是异步的，login调用的时候，catch也会被调用就会出错
+    }
     }
   return (
       <Form onFinish={handleSubmit}>
@@ -28,7 +40,7 @@ export default function Login() {
               <Input type="password"  id='password' placeholder='密码'/>
           </Form.Item>
           <Form.Item>
-              <LoginButton type='primary' htmlType='submit'>  登陆</LoginButton>
+              <LoginButton loading={isLoading} type='primary' htmlType='submit'>  登陆</LoginButton>
           </Form.Item>
     </Form>
   )

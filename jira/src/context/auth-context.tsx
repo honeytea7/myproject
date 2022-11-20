@@ -5,6 +5,8 @@ import { User } from "../screens/project-list/search-panel";
 import  * as auth from '../auth-provider'
 import { http } from '../util/http';
 import { useMount } from '../util';
+import { useAsunc } from '../util/use-async';
+import { FullPageErrorFallback, FullPageLoading } from '../component/lib';
 
 interface AuthForm{
     username: string,
@@ -33,14 +35,25 @@ const AuthContext = React.createContext<{
     logout: () => Promise<void>
 } | undefined>(undefined);
 AuthContext.displayName = 'AuthContext';
-export const AuthProvider = ({children}:{children:ReactNode}) => {
-    const [user, setUser] = useState<User|null>(null)
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const {isError,isIdle,error,isLoading,run,data:user,setData:setUser,}=useAsunc<User|null>()
+    
     const login = (form: AuthForm) => auth.login(form).then(setUser)
     const register = (form: AuthForm) => auth.register(form).then(setUser)
     const logout = () => auth.logout().then(() => setUser(null))
     useMount(() => {
-        bootstrapUser().then(setUser)
+     
+        run(bootstrapUser())
     })
+    
+    if (isIdle || isLoading) {
+    return <FullPageLoading></FullPageLoading>
+}
+
+    if (isError) {
+        return<FullPageErrorFallback error={error}></FullPageErrorFallback>
+    }
+
     // 记得把这个注释打开
     return (<AuthContext.Provider  children={children} value={ {user,login,register,logout}} />)
     
