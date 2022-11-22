@@ -38,7 +38,7 @@ const PageHeader = () =>
   const {logout,user}=useAuth()
 return ( <Header between={true}>
         <HeaderLeft gap={true}>
-       <Button type='link' onClick={resetRoute}> <Logo width={'18rem'} height={'5rem'} color={'rgb(38,132,255'}></Logo></Button>
+       <Button1  type='link' onClick={resetRoute}> <Logo width={'18rem'} height={'5rem'} color={'rgb(38,132,255'}></Logo></Button1>
         <h3>项目</h3>
         <h3>用户</h3>
         </HeaderLeft>
@@ -55,6 +55,11 @@ return ( <Header between={true}>
         </HeaderRight>
       </Header>)}
 
+
+const Button1=styled(Button)`
+  width:18rem;
+  height:5rem;
+`
 const Container = styled.div`
 display:grid;
 grid-template-rows:6rem 1fr 6rem;

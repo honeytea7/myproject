@@ -4,13 +4,15 @@ import { User } from './search-panel';
 import dayjs from 'dayjs';
 import { render } from '@testing-library/react';
 import { Link } from 'react-router-dom';
+import { Pin } from '../../component/pin';
+import { useEditProject } from '../../util/project';
 
 
 export interface Project{
-  id: string;
+  id: number;
   
   name: string;
-  personId: string
+  personId: number
   pin: boolean
   organization: string
   created:number
@@ -21,9 +23,17 @@ interface ListProps extends TableProps<Project>{
   
 }
 export  function List({ users ,...props}: ListProps) {
- 
+ const pinProject=(id:number,pin:boolean)=>mutate({id,pin})
+const {mutate}=useEditProject()
+  return (<Table pagination={false} rowKey='id' columns={[{
+    title: <Pin checked></Pin>,
+    render(value, project) {
+      return <Pin checked={project.pin} onCheckedChange={(pin) => {
 
-  return (<Table pagination={false}  rowKey='id' columns={[{
+        mutate({id:project.id,pin})
+      }} />
+    }
+  },{
     title: '名称',
 
     //可排序中文字符

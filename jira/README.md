@@ -147,3 +147,5 @@ function identity <T, U>(value: T, message: U) : T {
 
 console.log(identity(68, "Semlinker"));
 ```
+
+# 基本类型可以放在依赖里，；组件状态state可以放在依赖里，非组件的对象绝对不可放在依赖里，因为会引起刷新无限循环

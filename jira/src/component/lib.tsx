@@ -30,7 +30,7 @@ justify-content:center;
 export const FullPageLoading = () => <FullPage>
   <Spin size="large"></Spin>
 </FullPage>
-
+ 
 export const FullPageErrorFallback = ({error}:{error:Error|null}) => {
   return <FullPage>
     <DevTools></DevTools>

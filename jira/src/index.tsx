@@ -1,3 +1,5 @@
+// 本文件在最上面引入
+import './wdyr'
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
