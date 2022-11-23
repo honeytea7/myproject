@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useAuth } from './../context/auth-context';
 import qs from 'qs'
 import * as auth from '../auth-provider'
@@ -58,6 +59,7 @@ export const useHttp = () => {
 
 
     // TS的Utility Types的用法  ：用泛型给他传入一个其他类型，然后untility type对这个类型进行某种操作
-    return (...[endpoint,config]:Parameters<typeof http>)=> http(endpoint,{...config,token:user?.token})
+    return useCallback((...[endpoint, config]: Parameters<typeof http>) =>
+        http(endpoint, { ...config, token: user?.token }), [user?.token])
     
 }

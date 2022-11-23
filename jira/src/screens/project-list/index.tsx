@@ -1,7 +1,7 @@
 // 最上面引入
 
 
-import { useState } from 'react'
+// import { useState } from 'react'
 import {  useDebounce, useDocumentTitle } from '../../util'
 import SearchPanel from './search-panel'
 import  { List } from './list'
@@ -10,7 +10,7 @@ import styled from "@emotion/styled";
 import { Typography } from 'antd';
 import { useProjects } from '../../util/project';
 import { useUser } from '../../util/user';
-import { useUrlQueryParam } from '../../util/url'
+// import { useUrlQueryParam } from '../../util/url'
 import { useProjectsSearchParams } from './util';
 
 
@@ -20,7 +20,7 @@ export default function ProjectListScreen() {
   // const [param, setParam] = useUrlQueryParam(['name', 'personId'])
   // const projectsParam={...param,personId:Number(param.personId)||undefined}
  const [param,setParam]=useProjectsSearchParams()
-const{isLoading,error,data:list}=useProjects(useDebounce(param, 200))
+const{isLoading,error,data:list,retry}=useProjects(useDebounce(param, 200))
 
 const {data:users}= useUser()
     
@@ -30,7 +30,7 @@ const {data:users}= useUser()
       <Container>
       <SearchPanel users={users||[]} param={param} setParam={setParam}></SearchPanel>
       {error ? <Typography.Text> { error.message}</Typography.Text>:undefined}
-          <List users={users||[]} dataSource={list||[]} loading={isLoading} ></List>
+          <List refresh={retry} users={users||[]} dataSource={list||[]} loading={isLoading} ></List>
     </Container>
   )
 }

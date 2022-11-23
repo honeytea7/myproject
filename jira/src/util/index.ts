@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react"
 
 export const isFalsy = (value: any) => value === 0 ? false : !value
@@ -96,4 +97,18 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
     )
 }
 
-export const resetRoute = () =>window.location.href=window.location.origin
+export const resetRoute = () => window.location.href = window.location.origin
+
+
+
+//判断组件是否卸载时,阻止在已卸载的组件上赋值
+export const useMountedRef = () => {
+    const mountedRef = useRef(false)
+    useEffect(() => {
+        mountedRef.current = true
+        return () => {
+            mountedRef.current=false
+        }
+    })
+    return mountedRef
+}

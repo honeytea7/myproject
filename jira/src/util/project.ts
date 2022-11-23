@@ -1,5 +1,5 @@
 import { Project } from './../screens/project-list/list';
-import { useEffect} from 'react'
+import { useEffect,useCallback} from 'react'
 import { cleanObject  } from '../util'
 
 
@@ -14,14 +14,14 @@ import { useAsunc } from '../util/use-async';
 export const useProjects = (param?: Partial<Project>) => {
     const client = useHttp()
     
-   const{run,...result}=useAsunc<Project[]>()
+  const { run,...result } = useAsunc<Project[]>()
+  const fetchProjects=useCallback(()=>client('projects', { data: cleanObject(param||{}) }),[param,client])
   useEffect(() => {
    
-  run(  client('projects', { data: cleanObject(param||{}) })
-    )
+  run( fetchProjects() ,{retry:fetchProjects} )
    
-     //eslint-disable-next-line
-  }, [param])
+  
+  }, [param,fetchProjects,run])
     
     
     
@@ -56,6 +56,6 @@ export const useSAddProject = () => {
   }
   return {
     mutate,
-    ...asyncResult
+    ...asyncResult,
   }
 }

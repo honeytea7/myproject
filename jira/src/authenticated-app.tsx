@@ -35,7 +35,7 @@ export default function AuthenticatedApp() {
 
 const PageHeader = () =>
   {
-  const {logout,user}=useAuth()
+  
 return ( <Header between={true}>
         <HeaderLeft gap={true}>
        <Button1  type='link' onClick={resetRoute}> <Logo width={'18rem'} height={'5rem'} color={'rgb(38,132,255'}></Logo></Button1>
@@ -44,7 +44,13 @@ return ( <Header between={true}>
         </HeaderLeft>
      
         <HeaderRight>
-          <Dropdown overlay={
+         <User></User>
+        </HeaderRight>
+      </Header>)}
+
+const User = () => {
+  const { logout, user } = useAuth()
+  return  <Dropdown overlay={
             <Menu>
               <Menu.Item key={'logout'}>
                 <Button type='link' onClick={logout} >登出</Button>
@@ -52,8 +58,8 @@ return ( <Header between={true}>
           </Menu>}>
             <Button type={'link'} onClick={(e)=>e.preventDefault()}> Hi,{ user?.name}</Button>
           </Dropdown>
-        </HeaderRight>
-      </Header>)}
+}
+
 
 
 const Button1=styled(Button)`
