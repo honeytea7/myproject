@@ -7,14 +7,14 @@ import SearchPanel from './search-panel'
 import  { List } from './list'
 import styled from "@emotion/styled";
 
-import { Typography } from 'antd';
+import { Button, Row, Typography } from 'antd';
 import { useProjects } from '../../util/project';
 import { useUser } from '../../util/user';
 // import { useUrlQueryParam } from '../../util/url'
 import { useProjectsSearchParams } from './util';
 
 
-export default function ProjectListScreen() {
+export default function ProjectListScreen(props:{setProjectModalOpen:(isOpen:boolean)=>void}) {
   useDocumentTitle('项目列表',false)
 
   // const [param, setParam] = useUrlQueryParam(['name', 'personId'])
@@ -27,10 +27,14 @@ const {data:users}= useUser()
  
 
   return (
-      <Container>
+    <Container>
+      <Row justify="space-between">
+        <h1>项目列表</h1>
+        <Button onClick={()=>props.setProjectModalOpen(true)} >创建项目</Button>
+      </Row>
       <SearchPanel users={users||[]} param={param} setParam={setParam}></SearchPanel>
       {error ? <Typography.Text> { error.message}</Typography.Text>:undefined}
-          <List refresh={retry} users={users||[]} dataSource={list||[]} loading={isLoading} ></List>
+          <List setProjectModalOpen={props.setProjectModalOpen} refresh={retry} users={users||[]} dataSource={list||[]} loading={isLoading} ></List>
     </Container>
   )
 }

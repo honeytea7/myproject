@@ -1,7 +1,7 @@
 import {Navigate,Route,Routes}from'react-router'
 import styled from '@emotion/styled'
 
-import { Row } from './component/lib'
+import { ButtonNopaddding, Row } from './component/lib'
 import { useAuth } from './context/auth-context'
 
 import { ReactComponent as Logo } from './assets/jira2.svg'
@@ -9,16 +9,21 @@ import { Button, Dropdown, Menu } from 'antd'
 import { resetRoute } from './util'
 import ProjectScreen from './screens/project'
 import ProjectListScreen from './screens/project-list'
+import { useState } from 'react'
+import ProjectModal from './screens/project-list/project-modal'
+import ProjectPopover from './component/project-popover'
 
 export default function AuthenticatedApp() {
+
+  const [projectModalOpen,setProjectModalOpen]=useState(false)
   return (
       <Container>
-      <PageHeader></PageHeader>
+      <PageHeader setProjectModalOpen={setProjectModalOpen}></PageHeader>
       <Main>
        
           
         <Routes>
-          <Route path={'/projects'} element={< ProjectListScreen/>}> </Route>
+          <Route path={'/projects'} element={< ProjectListScreen setProjectModalOpen={setProjectModalOpen} />}> </Route>
           <Route path={'/projects/:projectId/*'} element={<ProjectScreen />}> </Route>
           
              <Route path="/" element={<Navigate to="/projects" />}></Route>
@@ -27,20 +32,21 @@ export default function AuthenticatedApp() {
       
       
       </Main>
+      <ProjectModal projectModalOpen={projectModalOpen} onClose={()=>setProjectModalOpen(!projectModalOpen)}></ProjectModal>
     </Container>
   )
 }
 
 
 
-const PageHeader = () =>
+const PageHeader = (props:{setProjectModalOpen:(isOpen:boolean)=>void}) =>
   {
   
 return ( <Header between={true}>
         <HeaderLeft gap={true}>
-       <Button1  type='link' onClick={resetRoute}> <Logo width={'18rem'} height={'5rem'} color={'rgb(38,132,255'}></Logo></Button1>
-        <h3>项目</h3>
-        <h3>用户</h3>
+    <ButtonNopaddding style={{ padding: 0 ,height:'15rem'}} type='link' onClick={()=>props.setProjectModalOpen(true)}> <Logo width={'16rem'} height={'4rem'} color={'rgb(38,132,255'}></Logo></ButtonNopaddding>
+        <ProjectPopover setProjectModalOpen={props.setProjectModalOpen}></ProjectPopover>
+        <span>用户</span>
         </HeaderLeft>
      
         <HeaderRight>
@@ -62,10 +68,7 @@ const User = () => {
 
 
 
-const Button1=styled(Button)`
-  width:18rem;
-  height:5rem;
-`
+
 const Container = styled.div`
 display:grid;
 grid-template-rows:6rem 1fr 6rem;

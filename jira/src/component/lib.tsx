@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Spin, Typography } from "antd";
+import { Button, Spin, Typography } from "antd";
 import { DevTools } from "jira-dev-tool";
 export const Row = styled.div<{
     gap?: number|boolean,
@@ -38,3 +38,8 @@ export const FullPageErrorFallback = ({error}:{error:Error|null}) => {
   </FullPage>
   
 }
+
+
+export const ButtonNopaddding = styled(Button)`
+padding:0;
+`

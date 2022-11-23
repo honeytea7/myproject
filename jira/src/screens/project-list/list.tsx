@@ -1,10 +1,11 @@
-import { Table, TableProps } from 'antd';
+import { Dropdown, Menu, Table, TableProps } from 'antd';
 
 import { User } from './search-panel';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { Pin } from '../../component/pin';
 import { useEditProject } from '../../util/project';
+import { ButtonNopaddding } from '../../component/lib';
 
 
 export interface Project{
@@ -19,7 +20,8 @@ export interface Project{
 interface ListProps extends TableProps<Project>{
   
   users: User[],
-  refresh?:()=>void
+  refresh?: () => void,
+  setProjectModalOpen:(isOpen:boolean)=>void
   
 }
 export  function List({ users ,...props}: ListProps) {
@@ -68,7 +70,19 @@ export  function List({ users ,...props}: ListProps) {
         }</span>
       )
     }
-    }]}
+    }
+    , {
+      render(value) {
+        return <Dropdown overlay={<Menu>
+          <Menu.Item key={'edit'}>
+            <ButtonNopaddding type='link' onClick={()=>props.setProjectModalOpen(true)}> 编辑</ButtonNopaddding>
+          </Menu.Item>
+        </Menu> }>
+          <ButtonNopaddding type='link'>...</ButtonNopaddding>
+        </Dropdown>
+        
+      }
+  }]}
   {...props}>
   
 </Table>)
