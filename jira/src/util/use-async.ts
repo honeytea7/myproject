@@ -1,5 +1,5 @@
 import { useMountedRef } from './index';
-import { useCallback, useState } from 'react';
+import { useCallback, useReducer, useState } from 'react';
 interface State<D>{
     error: Error | null;
     data: D | null;
@@ -20,19 +20,31 @@ const defaultConfig = {
 export const useAsunc = <D>(initialState?: State<D>,initialConfig?:typeof defaultConfig) => {
    const config={...defaultConfig,initialConfig}
     
-    const [state, setState] = useState<State<D>>({
-        ...defaultInittalState,
+    // const [state, setState] = useState<State<D>>({
+    //     ...defaultInittalState,
+    //     ...initialState
+    // })
+
+    // 改写成useReducer的形式
+    const [state, dispatch] = useReducer((state: State<D>, action: Partial<State<D>>) => ({ ...state, ...action }), {
+         ...defaultInittalState,
         ...initialState
     })
-    const mountedRef=useMountedRef()
-    const setData = useCallback((data: D) => setState({ data, stat: 'success', error: null }),[])
+    // const mountedRef = useMountedRef()
+    const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+        const mountedRef = useMountedRef()
+        return useCallback((...args:T[])=>(mountedRef.current?dispatch(...args):void 0),[dispatch,mountedRef])
+    }
+    
+    const safeDispatch=useSafeDispatch(dispatch)
+    const setData = useCallback((data: D) => safeDispatch({ data, stat: 'success', error: null }),[safeDispatch ])
 
     const setError =useCallback( (error: Error) => {
-            setState({
+            safeDispatch({
                 error,
                 stat: 'error',
             data:null})
-        },[])
+        },[safeDispatch])
     
     const [retry, setRetry] = useState(() => () => { })
     
@@ -50,10 +62,10 @@ export const useAsunc = <D>(initialState?: State<D>,initialConfig?:typeof defaul
                 run(runConfig?.retry(),runConfig)
             }})
       
-        setState(prevstate=>({ ...prevstate, stat: 'loading' }))
+        safeDispatch({ stat: 'loading' })
         return promise.then(data => {
-            if(mountedRef.current)
-            {setData(data)}
+          
+            setData(data)
             return data
         }).catch(error => {
 
@@ -63,7 +75,7 @@ export const useAsunc = <D>(initialState?: State<D>,initialConfig?:typeof defaul
             // 所以要return Promise.reject
             return Promise.reject(error)
         })
-    },[config.throwOnError, mountedRef,setData,setError])
+    },[config.throwOnError,setData,setError,safeDispatch])
     
     return {
         isIdle: state.stat==='idle',

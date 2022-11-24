@@ -164,3 +164,11 @@ console.log(identity(68, "Semlinker"));
 
   #  let const 也有暂时性死区
   在声明之前对该变量的访问是不被允许的,因为该变量放在暂时性死区里,如果访问该变量,就会报错
+
+  # useState和useReducer可以换
+  useState适合定义单个的状态,useReducer适合定义许多状态
+
+  # reducer
+  要保持纯洁性,不可以再纯函数里写异步操作
+  只要返回Promise就是异步函数
+  

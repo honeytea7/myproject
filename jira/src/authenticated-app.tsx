@@ -6,7 +6,7 @@ import { useAuth } from './context/auth-context'
 
 import { ReactComponent as Logo } from './assets/jira2.svg'
 import { Button, Dropdown, Menu } from 'antd'
-import { resetRoute } from './util'
+
 import ProjectScreen from './screens/project'
 import ProjectListScreen from './screens/project-list'
 import { useState } from 'react'
