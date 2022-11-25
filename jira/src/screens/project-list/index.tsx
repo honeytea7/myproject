@@ -11,10 +11,10 @@ import { Button, Row, Typography } from 'antd';
 import { useProjects } from '../../util/project';
 import { useUser } from '../../util/user';
 // import { useUrlQueryParam } from '../../util/url'
-import { useProjectsSearchParams } from './util';
+import { useProjectModal, useProjectsSearchParams } from './util';
 
 
-export default function ProjectListScreen(props:{setProjectModalOpen:(isOpen:boolean)=>void}) {
+export default function ProjectListScreen() { 
   useDocumentTitle('项目列表',false)
 
   // const [param, setParam] = useUrlQueryParam(['name', 'personId'])
@@ -23,18 +23,18 @@ export default function ProjectListScreen(props:{setProjectModalOpen:(isOpen:boo
 const{isLoading,error,data:list,retry}=useProjects(useDebounce(param, 200))
 
 const {data:users}= useUser()
-    
+    const [,open,]=useProjectModal()
  
 
   return (
     <Container>
       <Row justify="space-between">
         <h1>项目列表</h1>
-        <Button onClick={()=>props.setProjectModalOpen(true)} >创建项目</Button>
+        <Button onClick={open} >创建项目</Button>
       </Row>
       <SearchPanel users={users||[]} param={param} setParam={setParam}></SearchPanel>
       {error ? <Typography.Text> { error.message}</Typography.Text>:undefined}
-          <List setProjectModalOpen={props.setProjectModalOpen} refresh={retry} users={users||[]} dataSource={list||[]} loading={isLoading} ></List>
+          <List  refresh={retry} users={users||[]} dataSource={list||[]} loading={isLoading} ></List>
     </Container>
   )
 }

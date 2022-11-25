@@ -1,8 +1,10 @@
 import React from 'react'
 import { Drawer } from 'antd'
-export default function  ProjectModal(props:{projectModalOpen:boolean,onClose:()=>void}) {
+import { useProjectModal } from './util'
+export default function ProjectModal() {
+  const [projectModalOpen,,close]=useProjectModal()
   return (
-      <Drawer open={props.projectModalOpen} width='100%'>
+      <Drawer open={projectModalOpen} onClose={close} width='100%'>
         <h1>1</h1>
       </Drawer>
   )

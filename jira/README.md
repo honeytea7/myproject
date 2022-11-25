@@ -172,3 +172,6 @@ console.log(identity(68, "Semlinker"));
   要保持纯洁性,不可以再纯函数里写异步操作
   只要返回Promise就是异步函数
   
+
+#   // 返回tuple的好处,一个好处就是在使用的时候，就可以直接重新命名，类似于useState
+组件间解耦
