@@ -6,24 +6,23 @@ import { useAuth } from './context/auth-context'
 
 import { ReactComponent as Logo } from './assets/jira2.svg'
 import { Button, Dropdown, Menu } from 'antd'
-import { resetRoute } from './util'
+
 import ProjectScreen from './screens/project'
 import ProjectListScreen from './screens/project-list'
-import { useState } from 'react'
+
 import ProjectModal from './screens/project-list/project-modal'
 import ProjectPopover from './component/project-popover'
 
 export default function AuthenticatedApp() {
 
-  const [projectModalOpen,setProjectModalOpen]=useState(false)
   return (
       <Container>
-      <PageHeader setProjectModalOpen={setProjectModalOpen}></PageHeader>
+      <PageHeader ></PageHeader>
       <Main>
        
           
         <Routes>
-          <Route path={'/projects'} element={< ProjectListScreen setProjectModalOpen={setProjectModalOpen} />}> </Route>
+          <Route path={'/projects'} element={< ProjectListScreen  />}> </Route>
           <Route path={'/projects/:projectId/*'} element={<ProjectScreen />}> </Route>
           
              <Route path="/" element={<Navigate to="/projects" />}></Route>
@@ -32,20 +31,21 @@ export default function AuthenticatedApp() {
       
       
       </Main>
-      <ProjectModal projectModalOpen={projectModalOpen} onClose={()=>setProjectModalOpen(!projectModalOpen)}></ProjectModal>
+      <ProjectModal ></ProjectModal>
     </Container>
   )
 }
 
 
 
-const PageHeader = (props:{setProjectModalOpen:(isOpen:boolean)=>void}) =>
+const PageHeader = () =>
   {
   
 return ( <Header between={true}>
         <HeaderLeft gap={true}>
-    <ButtonNopaddding style={{ padding: 0 ,height:'15rem'}} type='link' onClick={()=>props.setProjectModalOpen(true)}> <Logo width={'16rem'} height={'4rem'} color={'rgb(38,132,255'}></Logo></ButtonNopaddding>
-        <ProjectPopover setProjectModalOpen={props.setProjectModalOpen}></ProjectPopover>
+    <ButtonNopaddding style={{ padding: 0 ,height:'15rem'}} type='link' onClick={()=>{console.log(1)
+    }}> <Logo width={'16rem'} height={'4rem'} color={'rgb(38,132,255'}></Logo></ButtonNopaddding>
+        <ProjectPopover ></ProjectPopover>
         <span>用户</span>
         </HeaderLeft>
      

@@ -164,3 +164,9 @@ console.log(identity(68, "Semlinker"));
 
   #  let const 也有暂时性死区
   在声明之前对该变量的访问是不被允许的,因为该变量放在暂时性死区里,如果访问该变量,就会报错
+
+
+  # 新建了分支时使用redux-toolkit管理状态 
+  
+
+  

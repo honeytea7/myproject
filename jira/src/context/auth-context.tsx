@@ -1,5 +1,5 @@
 // import { login, register, logout } from '../auth-provider';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useCallback } from 'react';
 import React from 'react';
 import { User } from "../screens/project-list/search-panel";
 import  * as auth from '../auth-provider'
@@ -7,8 +7,11 @@ import { http } from '../util/http';
 import { useMount } from '../util';
 import { useAsunc } from '../util/use-async';
 import { FullPageErrorFallback, FullPageLoading } from '../component/lib';
-
-interface AuthForm{
+import * as authStore from '../store/auth.slice'
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { bootstrap } from '../store/auth.slice';
+export interface AuthForm{
     username: string,
     password:string
 }
@@ -16,7 +19,7 @@ interface AuthForm{
 
 
 
-const bootstrapUser = async () => {
+export const bootstrapUser = async () => {
     let user = null
     const token = auth.getToken()
     if (token) {
@@ -28,22 +31,23 @@ const bootstrapUser = async () => {
 }
 
 
-const AuthContext = React.createContext<{
-    user: User | null,
-    register: (form: AuthForm) => Promise<any>,
-    login: (form: AuthForm) => Promise<void>
-    logout: () => Promise<void>
-} | undefined>(undefined);
-AuthContext.displayName = 'AuthContext';
+// const AuthContext = React.createContext<{
+//     user: User | null,
+//     register: (form: AuthForm) => Promise<any>,
+//     login: (form: AuthForm) => Promise<void>
+//     logout: () => Promise<void>
+// } | undefined>(undefined);
+// AuthContext.displayName = 'AuthContext';
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const {isError,isIdle,error,isLoading,run,data:user,setData:setUser,}=useAsunc<User|null>()
+    const { isError, isIdle, error, isLoading, run } = useAsunc<User | null>()
+    const dispatch:(...args:any[])=>Promise<User>=useDispatch()
     
-    const login = (form: AuthForm) => auth.login(form).then(setUser)
-    const register = (form: AuthForm) => auth.register(form).then(setUser)
-    const logout = () => auth.logout().then(() => setUser(null))
+    // const login = (form: AuthForm) => auth.login(form).then(setUser)
+    // const register = (form: AuthForm) => auth.register(form).then(setUser)
+    // const logout = () => auth.logout().then(() => setUser(null))
     useMount(() => {
      
-        run(bootstrapUser())
+        run(dispatch(bootstrap()))
     })
     
     if (isIdle || isLoading) {
@@ -55,15 +59,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     // 记得把这个注释打开
-    return (<AuthContext.Provider  children={children} value={ {user,login,register,logout}} />)
-    
-}
+    // return (<AuthContext.Provider  children={children} value={ {user,login,register,logout}} />)
+    return <div>{children}</div>}
 export const useAuth = () => {
-    const context = React.useContext(AuthContext)
-    if (!context) {
-        throw new Error('useAuth必须再Authprovider中使用')
-    }
-    return context
+    const dispatch:(...args:any[])=>Promise<User> = useDispatch()
+    const user=useSelector(authStore.selectUser)
+    const login = useCallback((form: AuthForm) => dispatch(authStore.login(form)), [dispatch]
+    )
+    const register = useCallback((form: AuthForm) => dispatch(authStore.register(form)),[dispatch])
+       const logout=useCallback(()=>dispatch(authStore.logout()),[dispatch])
+    return {user,register,login,logout}
     
 }
 // 您的文件扩展名很可能是 .ts而不是 .tsx .

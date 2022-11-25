@@ -1,18 +1,21 @@
-import React, { FormEvent } from 'react'
+
 import { useAuth } from '../context/auth-context'
 
-import {Form, Input,Button} from'antd'
+import {Form, Input} from'antd'
 import { LoginButton } from './Index'
 import { useAsunc } from '../util/use-async'
+import { useDispatch } from 'react-redux'
+import { User } from '../screens/project-list/search-panel'
 export default function Login({onError}:{onError:(error:Error)=>void}) {
   const { login, user } = useAuth()
   
   const {run ,isLoading}=useAsunc(undefined,{throwOnError:true})
-
+const dispatch:(...args:any[])=>Promise<User> =useDispatch()
 
 
     const handleSubmit = async(value: {username:string,password:string}) => {
       console.log(value);
+      dispatch(login(value))
       
         // event.preventDefault()
         // const username = (event.currentTarget.elements[0] as HTMLInputElement).value

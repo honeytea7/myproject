@@ -12,11 +12,13 @@ import { useProjects } from '../../util/project';
 import { useUser } from '../../util/user';
 // import { useUrlQueryParam } from '../../util/url'
 import { useProjectsSearchParams } from './util';
+import { useDispatch } from 'react-redux';
+import { projectActions } from './project-list.slice';
 
 
-export default function ProjectListScreen(props:{setProjectModalOpen:(isOpen:boolean)=>void}) {
+export default function ProjectListScreen() {
   useDocumentTitle('项目列表',false)
-
+const dispatch=useDispatch()
   // const [param, setParam] = useUrlQueryParam(['name', 'personId'])
   // const projectsParam={...param,personId:Number(param.personId)||undefined}
  const [param,setParam]=useProjectsSearchParams()
@@ -30,11 +32,11 @@ const {data:users}= useUser()
     <Container>
       <Row justify="space-between">
         <h1>项目列表</h1>
-        <Button onClick={()=>props.setProjectModalOpen(true)} >创建项目</Button>
+        <Button onClick={()=>dispatch(projectActions.openProjectModal(true))} >创建项目</Button>
       </Row>
       <SearchPanel users={users||[]} param={param} setParam={setParam}></SearchPanel>
       {error ? <Typography.Text> { error.message}</Typography.Text>:undefined}
-          <List setProjectModalOpen={props.setProjectModalOpen} refresh={retry} users={users||[]} dataSource={list||[]} loading={isLoading} ></List>
+          <List refresh={retry} users={users||[]} dataSource={list||[]} loading={isLoading} ></List>
     </Container>
   )
 }
